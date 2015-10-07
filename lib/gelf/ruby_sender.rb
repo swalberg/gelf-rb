@@ -13,7 +13,8 @@ module GELF
       host, port = @addresses[@i]
       @i = (@i + 1) % @addresses.length
       datagrams.each do |datagram|
-        @socket.send(datagram, 0, host, port)
+        socket = Thread.current[:gelf_socket] ||= UDPSocket.open
+        socket.send(datagram, 0, host, port)
       end
     end
 
